@@ -16,35 +16,13 @@ class Event
     /** @var int */
     protected $calendarId;
 
-    public static function createFromGoogleCalendarEvent(Google_Service_Calendar_Event $googleEvent, $calendarId)
+    public function __construct($calendarId = null)
     {
-        $event = new static();
-
-        $event->googleEvent = $googleEvent;
-
-        $event->calendarId = $calendarId;
-
-        return $event;
-    }
-
-    public static function create(array $properties, string $calendarId = null)
-    {
-        $event = new static();
-
-        $event->calendarId = static::getGoogleCalendar($calendarId)->getCalendarId();
-
-        foreach ($properties as $name => $value) {
-            $event->$name = $value;
-        }
-
-        return $event->save('insertEvent');
-    }
-
-    public function __construct()
-    {
+        $this->calendarId = $calendarId;
         $this->googleEvent = new Google_Service_Calendar_Event();
     }
-
+    
+    
     /**
      * @param string $name
      *
@@ -136,6 +114,31 @@ class Event
 
         return static::createFromGoogleCalendarEvent($googleEvent, $calendarId);
     }
+    
+    public static function createFromGoogleCalendarEvent(Google_Service_Calendar_Event $googleEvent, $calendarId)
+    {
+        $event = new static();
+
+        $event->googleEvent = $googleEvent;
+
+        $event->calendarId = $calendarId;
+
+        return $event;
+    }
+
+    public static function create(array $properties, string $calendarId = null)
+    {
+        $event = new static();
+
+        $event->calendarId = static::getGoogleCalendar($calendarId)->getCalendarId();
+
+        foreach ($properties as $name => $value) {
+            $event->$name = $value;
+        }
+
+        return $event->save('insertEvent');
+    }
+
 
     public function save($method = null): Event
     {
